@@ -4,7 +4,7 @@ import './styles.css';
 
 // Same-origin API. Works on Render/Railway/phone URL and also with local Vite proxy if configured.
 const API = '';
-const APP_VERSION = '相場歪観測機 v58 iPhone UX';
+const APP_VERSION = '相場歪観測機 v58 UX5';
 
 const DEFAULT_CODES = [
   { code: '3687', name: 'フィックスターズ', sector: 'AI/量子' },
@@ -305,6 +305,7 @@ function App() {
   const refreshInFlightRef = useRef(false);
   const importFileRef = useRef(null);
   const [dataTransferMsg, setDataTransferMsg] = useState('');
+  const [controlDrawerOpen, setControlDrawerOpen] = useState(false);
 
   useEffect(() => save('watchlist', watch), [watch]);
   useEffect(() => save('manualRows', manual), [manual]);
@@ -739,10 +740,17 @@ function App() {
     <header className="topbar compactTopbar">
       <div className="appVersion" title="現在のアプリ版">{APP_VERSION}</div>
       <div className="actions">
-        <div className="refreshStatus">
-          <span>{refreshInterval ? `${refreshOption.label}自動更新 ON` : '自動更新 OFF'}</span>
-          <em className={`freshness ${freshnessClass}`}>{lastUpdated ? `最終更新 ${lastUpdated.toLocaleTimeString('ja-JP')} / ${freshnessText}` : '未更新'}</em>
+        <div className="mobileStatusBar">
+          <div className="refreshStatus">
+            <span>{refreshInterval ? `${refreshOption.label}自動更新 ON` : '自動更新 OFF'}</span>
+            <em className={`freshness ${freshnessClass}`}>{lastUpdated ? `最終更新 ${lastUpdated.toLocaleTimeString('ja-JP')} / ${freshnessText}` : '未更新'}</em>
+          </div>
+          <div className="mobileQuickActions">
+            <button className="refreshMiniBtn" onClick={refresh} disabled={loading}>{loading ? '取得中' : '更新'}</button>
+            <button className={controlDrawerOpen ? 'drawerToggle activeToggle' : 'drawerToggle'} onClick={() => setControlDrawerOpen(!controlDrawerOpen)}>{controlDrawerOpen ? '操作を閉じる' : '操作'}</button>
+          </div>
         </div>
+        <div className={controlDrawerOpen ? 'controlDrawer open' : 'controlDrawer'}>
         <div className="topScanControls">
           <div className="sourceTabs compactSource">
             <button className={scannerSource === 'watch' ? 'active' : ''} onClick={() => { setScannerSource('watch'); refresh('watch'); }}>監視</button>
@@ -785,6 +793,7 @@ function App() {
           {dataTransferMsg && <span>{dataTransferMsg}</span>}
         </div>
         {intervalWarning && <div className="intervalWarning">{intervalWarning}</div>}
+        </div>
       </div>
     </header>
     {error && <div className="error">{error}</div>}
