@@ -1048,3 +1048,227 @@ th.sortable small { color: var(--accent); font-size: 10px; }
 .precisionChart .legendSvg text{fill:#94a3b8;font-size:10px;font-weight:700;}
 .chartLegend.precise span{font-size:11px;}
 @media (max-width:1200px){.chartStatsGrid{grid-template-columns:repeat(2,minmax(0,1fr));}.precisionChart{height:360px;}}
+
+
+/* =========================================================
+   iPhone / PWA usability layer v58.1
+   - wider tap targets
+   - safe-area padding for notch/home indicator
+   - horizontal scroll containers for dense tables/tabs
+   - avoids iOS input zoom
+   ========================================================= */
+html {
+  min-height: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--bg);
+}
+body {
+  min-height: 100%;
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: rgba(255, 122, 61, .18);
+}
+button, input, textarea, select {
+  font-size: 16px; /* prevents iOS Safari auto-zoom */
+}
+button, .links a, .irItem, .watchitem {
+  touch-action: manipulation;
+}
+button {
+  min-height: 44px;
+}
+.app {
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+}
+.tableWrap, .irList.compactList {
+  -webkit-overflow-scrolling: touch;
+}
+.tabs, .sourceTabs, .intervalButtons, .detailTabs, .links, .chartLegend, .chips {
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 780px) {
+  .app {
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+  }
+  h1 { font-size: 20px; letter-spacing: -.02em; }
+  h2 { font-size: 16px; }
+  h3 { font-size: 16px; }
+  .eyebrow { font-size: 10px; letter-spacing: .12em; }
+  .topbar {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    justify-content: stretch;
+  }
+  .actions button {
+    width: 100%;
+    padding: 9px 8px;
+  }
+  .refreshStatus {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+  }
+  .layout {
+    gap: 10px;
+  }
+  .panel {
+    border-radius: 12px;
+    padding: 11px;
+  }
+  .addrow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+  .manual {
+    min-height: 92px;
+  }
+  .sectionHead {
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+  .tabs, .sourceTabs, .intervalButtons, .links, .chartLegend, .chips {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding-bottom: 3px;
+  }
+  .tabs button, .sourceTabs button, .intervalButtons button, .links a, .chartLegend span, .chips span {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .detailTabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 7px;
+    padding-bottom: 3px;
+  }
+  .detailTabs button {
+    flex: 0 0 auto;
+    min-width: 86px;
+  }
+  .scannerControls {
+    gap: 7px;
+  }
+  .priceFilter {
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr auto;
+    width: 100%;
+    align-items: center;
+  }
+  .priceFilter input {
+    width: 100%;
+    min-width: 0;
+  }
+  .tableWrap {
+    max-height: 62vh;
+    margin-left: -4px;
+    margin-right: -4px;
+    border-radius: 9px;
+  }
+  table {
+    min-width: 720px;
+    font-size: 11px;
+  }
+  th, td {
+    padding: 7px 6px;
+  }
+  th:first-child, td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: #101823;
+    box-shadow: 1px 0 0 var(--border);
+  }
+  td:first-child {
+    background: var(--panel2);
+  }
+  tr.selected td:first-child, tbody tr:hover td:first-child {
+    background: #172233;
+  }
+  .titleLine {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+  .titleLine b { font-size: 18px; }
+  .priceLine {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .priceLine span { font-size: 25px; }
+  .badge {
+    margin-bottom: 10px;
+    padding: 6px 9px;
+  }
+  .metric {
+    padding: 9px;
+  }
+  .metric b {
+    font-size: 16px;
+  }
+  .researchHeader, .irHeader {
+    gap: 8px;
+  }
+  .stance {
+    align-self: flex-start;
+  }
+  .miniChart {
+    height: 180px;
+    padding: 6px;
+  }
+  .zone {
+    grid-template-columns: 68px 74px 1fr;
+    gap: 6px;
+    padding: 7px;
+  }
+  .irList.compactList {
+    max-height: 55vh;
+  }
+  footer {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 430px) {
+  .actions {
+    grid-template-columns: 1fr;
+  }
+  .priceFilter {
+    grid-template-columns: 1fr 1fr;
+  }
+  .priceFilter span {
+    grid-column: 1 / -1;
+  }
+  .priceFilter button {
+    grid-column: 1 / -1;
+  }
+  .addrow {
+    grid-template-columns: 1fr;
+  }
+  .watchitem {
+    align-items: flex-start;
+  }
+  .watchitem button {
+    min-height: 34px;
+  }
+}
+
+@media (display-mode: standalone) {
+  .app {
+    padding-top: max(12px, env(safe-area-inset-top));
+  }
+}
