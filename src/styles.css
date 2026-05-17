@@ -1272,3 +1272,271 @@ button {
     padding-top: max(12px, env(safe-area-inset-top));
   }
 }
+
+/* =========================================================
+   v58 iPhone UX correction
+   - previous mobile CSS made every control full-width.
+   - restore dense chip controls while keeping 44px tap areas.
+   - add local data export/import tools for PC -> iPhone migration.
+   ========================================================= */
+.hiddenFileInput { display: none !important; }
+.dataTools {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.dataTools span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.refreshMainBtn { font-weight: 800; }
+
+@media (max-width: 780px) {
+  .topbar.compactTopbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(7, 12, 18, .94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .topbar.compactTopbar .appVersion {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .actions {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center;
+    gap: 7px !important;
+    justify-content: flex-start;
+  }
+  .actions button {
+    width: auto !important;
+    flex: 0 0 auto;
+    min-height: 38px;
+    padding: 7px 11px !important;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1;
+  }
+  .refreshStatus {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 9px;
+    align-items: baseline;
+    justify-content: flex-start;
+    padding: 6px 9px !important;
+    border-radius: 11px;
+  }
+  .refreshStatus span {
+    font-size: 13px;
+  }
+  .refreshStatus em {
+    font-size: 12px;
+  }
+  .topScanControls {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 7px;
+  }
+  .sourceTabs.compactSource,
+  .intervalButtons,
+  .layoutButtons,
+  .scannerControls .tabs,
+  .scannerControls .modeSwitch,
+  .detailTabs {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    gap: 7px;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .sourceTabs.compactSource::-webkit-scrollbar,
+  .intervalButtons::-webkit-scrollbar,
+  .layoutButtons::-webkit-scrollbar,
+  .detailTabs::-webkit-scrollbar { display: none; }
+  .sourceTabs.compactSource button,
+  .intervalButtons button,
+  .layoutButtons button,
+  .scannerControls .tabs button,
+  .scannerControls .modeSwitch button,
+  .detailTabs button {
+    min-width: auto !important;
+    width: auto !important;
+    flex: 0 0 auto !important;
+    white-space: nowrap;
+  }
+  .topScanControls label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: 6px;
+    font-size: 13px;
+  }
+  .topScanControls label input,
+  .topScanControls label select {
+    width: 94px;
+    min-width: 84px;
+    height: 38px;
+    padding: 6px 9px;
+    border-radius: 11px;
+  }
+  .topScanControls label:first-of-type select {
+    width: 136px;
+  }
+  .scanPreview,
+  .intervalWarning {
+    width: 100%;
+    font-size: 12px;
+    padding: 4px 2px;
+    color: #ffd86b;
+  }
+  .refreshMainBtn {
+    min-width: 104px;
+  }
+  .dataTools {
+    width: 100%;
+    padding-top: 2px;
+  }
+  .dataTools button {
+    min-height: 34px;
+    padding: 6px 10px !important;
+    font-size: 13px;
+  }
+  .dataTools span {
+    flex-basis: 100%;
+    font-size: 12px;
+  }
+  main.layout {
+    display: grid;
+    grid-template-columns: 1fr !important;
+  }
+  .panel.watch,
+  .panel.scanner,
+  .panel.detail {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .panel.watch.collapsed .watchInner,
+  .panel.detail.collapsed .detailInner {
+    display: none;
+  }
+  .sideToggle,
+  .detailToggle {
+    position: sticky;
+    top: 74px;
+    z-index: 12;
+  }
+  .watchInner .addrow.single,
+  .dropQuickBox .addrow.single {
+    grid-template-columns: 1fr auto !important;
+  }
+  .watchInner .addrow.single input,
+  .dropQuickBox .addrow.single input {
+    min-width: 0;
+  }
+  .sectionHead {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .scannerControls {
+    width: 100%;
+  }
+  .tableWrap {
+    max-height: 58vh;
+  }
+}
+
+@media (max-width: 430px) {
+  .actions { gap: 6px !important; }
+  .actions button { min-height: 36px; padding: 6px 10px !important; font-size: 14px; }
+  .refreshStatus { flex-direction: column; gap: 2px; }
+  .topScanControls label input { width: 86px; }
+  .topScanControls label:first-of-type select { width: 128px; }
+  .watchInner .addrow.single,
+  .dropQuickBox .addrow.single {
+    grid-template-columns: 1fr auto !important;
+  }
+  .watchInner .addrow.single button,
+  .dropQuickBox .addrow.single button {
+    width: auto !important;
+    min-width: 70px;
+  }
+}
+
+
+/* =========================================================
+   UX3 emergency mobile override: force compact controls.
+   This block is intentionally last and specific.
+   ========================================================= */
+@media (max-width: 780px) {
+  .app > header.topbar.compactTopbar .actions {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+  }
+  .app > header.topbar.compactTopbar .actions > button,
+  .app > header.topbar.compactTopbar .actions button {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
+    min-height: 34px !important;
+    padding: 6px 9px !important;
+    font-size: 13px !important;
+    line-height: 1.15 !important;
+    border-radius: 10px !important;
+  }
+  .app > header.topbar.compactTopbar .refreshStatus {
+    order: -10 !important;
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    min-height: 0 !important;
+    padding: 6px 9px !important;
+  }
+  .app > header.topbar.compactTopbar .topScanControls {
+    order: 10 !important;
+    width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+  .app > header.topbar.compactTopbar .intervalButtons,
+  .app > header.topbar.compactTopbar .layoutButtons,
+  .app > header.topbar.compactTopbar .sourceTabs.compactSource {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+    gap: 6px !important;
+    padding-bottom: 2px !important;
+  }
+  .app > header.topbar.compactTopbar .intervalButtons button,
+  .app > header.topbar.compactTopbar .layoutButtons button,
+  .app > header.topbar.compactTopbar .sourceTabs.compactSource button {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    min-width: 58px !important;
+    min-height: 34px !important;
+  }
+  .app > header.topbar.compactTopbar .refreshMainBtn {
+    min-width: 82px !important;
+  }
+  .app > header.topbar.compactTopbar .dataTools {
+    display: flex !important;
+    width: 100% !important;
+    gap: 6px !important;
+  }
+  .app > header.topbar.compactTopbar .dataTools button {
+    width: auto !important;
+    flex: 0 0 auto !important;
+  }
+}

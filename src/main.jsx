@@ -4,7 +4,7 @@ import './styles.css';
 
 // Same-origin API. Works on Render/Railway/phone URL and also with local Vite proxy if configured.
 const API = '';
-const APP_VERSION = '相場歪観測機 v58';
+const APP_VERSION = '相場歪観測機 v58 UX3';
 
 const DEFAULT_CODES = [
   { code: '3687', name: 'フィックスターズ', sector: 'AI/量子' },
@@ -303,6 +303,8 @@ function App() {
   const [creditNotes, setCreditNotes] = useState(() => load('creditBalanceNotes', {}));
   const [clockTick, setClockTick] = useState(Date.now());
   const refreshInFlightRef = useRef(false);
+  const importFileRef = useRef(null);
+  const [dataTransferMsg, setDataTransferMsg] = useState('');
 
   useEffect(() => save('watchlist', watch), [watch]);
   useEffect(() => save('manualRows', manual), [manual]);
@@ -664,6 +666,63 @@ function App() {
     });
   }, [quotes, filter, scannerMode, sortSpec]);
 
+
+  function exportLocalData() {
+    const payload = {
+      app: 'soubayugami-kansokuki',
+      version: APP_VERSION,
+      exportedAt: new Date().toISOString(),
+      watch,
+      manual,
+      scannerMode,
+      refreshInterval,
+      scannerSource,
+      nikkeiMaxPrice,
+      scannerMinPrice,
+      scannerMinVolume,
+      scannerSector,
+      companyResearchNotes: companyNotes,
+      creditBalanceNotes: creditNotes,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0, 10).replaceAll('-', '');
+    a.href = url;
+    a.download = `soubayugami-v58-backup-${stamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setDataTransferMsg('保存データを書き出しました');
+    setTimeout(() => setDataTransferMsg(''), 4000);
+  }
+
+  async function importLocalDataFile(file) {
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      if (Array.isArray(data.watch)) setWatch(data.watch);
+      if (typeof data.manual === 'string') setManual(data.manual);
+      if (data.scannerMode) setScannerMode(data.scannerMode);
+      if ('refreshInterval' in data) setRefreshInterval(data.refreshInterval);
+      if (data.scannerSource) setScannerSource(data.scannerSource);
+      if ('nikkeiMaxPrice' in data) setNikkeiMaxPrice(Number(data.nikkeiMaxPrice) || 3000);
+      if ('scannerMinPrice' in data) setScannerMinPrice(Number(data.scannerMinPrice) || 0);
+      if ('scannerMinVolume' in data) setScannerMinVolume(Number(data.scannerMinVolume) || 0);
+      if (data.scannerSector) setScannerSector(data.scannerSector);
+      if (data.companyResearchNotes && typeof data.companyResearchNotes === 'object') setCompanyNotes(data.companyResearchNotes);
+      if (data.creditBalanceNotes && typeof data.creditBalanceNotes === 'object') setCreditNotes(data.creditBalanceNotes);
+      setDataTransferMsg('保存データを読み込みました。必要なら価格更新してください。');
+      setTimeout(() => setDataTransferMsg(''), 6000);
+    } catch (e) {
+      setDataTransferMsg(`読み込み失敗: ${e.message}`);
+    } finally {
+      if (importFileRef.current) importFileRef.current.value = '';
+    }
+  }
+
   function importManual() {
     const parsed = manual.split('\n').map((line) => line.trim()).filter(Boolean).map((line) => {
       const [code, name, sector] = line.split(/[\t,]/).map((x) => x?.trim());
@@ -718,7 +777,13 @@ function App() {
           <button className={!sidebarOpen ? 'activeToggle' : ''} onClick={() => setSidebarOpen(!sidebarOpen)}>{sidebarOpen ? '左格納' : '左表示'}</button>
           <button className={!detailOpen ? 'activeToggle' : ''} onClick={() => setDetailOpen(!detailOpen)}>{detailOpen ? '右格納' : '右表示'}</button>
         </div>
-        <button onClick={refresh} disabled={loading}>{loading ? '取得中…' : '価格更新'}</button>
+        <button className="refreshMainBtn" onClick={refresh} disabled={loading}>{loading ? '取得中…' : '価格更新'}</button>
+        <div className="dataTools">
+          <button className="sub" onClick={exportLocalData}>保存書出</button>
+          <button className="sub" onClick={() => importFileRef.current?.click()}>保存読込</button>
+          <input ref={importFileRef} className="hiddenFileInput" type="file" accept="application/json,.json" onChange={(e) => importLocalDataFile(e.target.files?.[0])} />
+          {dataTransferMsg && <span>{dataTransferMsg}</span>}
+        </div>
         {intervalWarning && <div className="intervalWarning">{intervalWarning}</div>}
       </div>
     </header>
